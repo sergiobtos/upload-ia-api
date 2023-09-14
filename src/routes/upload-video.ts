@@ -24,11 +24,12 @@ export async function uploadVideoRoute(app: FastifyInstance) {
     }
 
     const extension = path.extname(data.filename);
+    console.log(extension);
 
-    if (extension === ".mp3") {
-      return res
-        .status(400)
-        .send({ error: "Invalid input type, please upload a MP3 file." });
+    if (extension !== ".mp3") {
+      return res.status(400).send({
+        error: "Invalid input type, please upload a MP3 file." + extension,
+      });
     }
 
     const fileBaseName = path.basename(data.filename, extension);
@@ -42,13 +43,13 @@ export async function uploadVideoRoute(app: FastifyInstance) {
 
     await pump(data.file, fs.createWriteStream(uploadDestination));
 
-    const video = await prisma.video.create({
+    const mp3FromVideo = await prisma.video.create({
       data: {
         name: data.filename,
         path: uploadDestination,
       },
     });
 
-    return res.status(200).send({ video });
+    return res.status(200).send({ mp3FromVideo });
   });
 }
