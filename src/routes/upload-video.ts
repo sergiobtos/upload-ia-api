@@ -24,7 +24,6 @@ export async function uploadVideoRoute(app: FastifyInstance) {
     }
 
     const extension = path.extname(data.filename);
-    console.log(extension);
 
     if (extension !== ".mp3") {
       return res.status(400).send({
@@ -50,6 +49,8 @@ export async function uploadVideoRoute(app: FastifyInstance) {
       },
     });
 
-    return res.status(200).send({ mp3FromVideo });
+    return {
+      mp3FromVideo,
+    };
   });
 }
